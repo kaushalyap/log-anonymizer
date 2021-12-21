@@ -26,7 +26,7 @@
     <enum>Qt::Horizontal</enum>
    </property>
    <property name="standardButtons">
-    <set>QDialogButtonBox::Discard|QDialogButtonBox::Save</set>
+    <set>QDialogButtonBox::Ignore|QDialogButtonBox::Save</set>
    </property>
   </widget>
   <widget class="QCheckBox" name="cbHideAbsPaths">
@@ -41,8 +41,11 @@
    <property name="text">
     <string>Hide absolute paths</string>
    </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
   </widget>
-  <widget class="QCheckBox" name="cbAnonymizeProjectNames">
+  <widget class="QCheckBox" name="cbHideIpAddresses">
    <property name="geometry">
     <rect>
      <x>110</x>
@@ -52,7 +55,20 @@
     </rect>
    </property>
    <property name="text">
-    <string>Anonymize project names</string>
+    <string>Hide IP Addresses</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="cbHideMac">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>150</y>
+     <width>181</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Hide MAC addresses</string>
    </property>
   </widget>
  </widget>
@@ -65,12 +81,12 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>341</x>
+     <y>258</y>
     </hint>
     <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
+     <x>330</x>
+     <y>152</y>
     </hint>
    </hints>
   </connection>
@@ -81,12 +97,12 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>245</x>
+     <y>249</y>
     </hint>
     <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
+     <x>200</x>
+     <y>183</y>
     </hint>
    </hints>
   </connection>

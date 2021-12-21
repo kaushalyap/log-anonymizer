@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
+    initializeDefaultSettings();
 }
 
 MainWindow::~MainWindow()
@@ -22,12 +22,25 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_btnAnonymize_clicked()
-{
-    ui -> pTxtEditOutput -> setPlainText("something cool");
-    // anonymize text from input text field
+void MainWindow::initializeDefaultSettings(){
+    qDebug("settings->loadSettings()[0] : %d\n", settings->loadSettings()[0]);
+
+    // if first run
+    if(!settings->loadSettings()[0]){
+        settings->saveSettings(true, false, true, true);
+        qDebug("Initialized default settings!");
+    }
+    else{
+        qDebug("Default settings already initialized!");
+    }
 }
 
+void MainWindow::on_btnAnonymize_clicked()
+{
+    string input = ui-> pTxtEditInput -> toPlainText().toStdString();
+    string output = anonymizer -> anonymize(input);
+    ui -> pTxtEditOutput -> setPlainText(QString::fromStdString(output));
+}
 
 void MainWindow::on_btnCopyToClipboard_clicked()
 {
@@ -53,14 +66,16 @@ void MainWindow::on_actionExit_triggered()
 
 void MainWindow::on_actionAnonymize_triggered()
 {
+    string input = ui-> pTxtEditInput -> toPlainText().toStdString();
+    string output = anonymizer -> anonymize(input);
+    ui -> pTxtEditOutput -> setPlainText(QString::fromStdString(output));
 
 }
 
 void MainWindow::on_actionClear_triggered()
 {
-
     ui -> pTxtEditInput -> clear();
-
+    ui -> pTxtEditOutput -> clear();
 }
 
 void MainWindow::on_actionCopy_to_Clipboard_triggered()

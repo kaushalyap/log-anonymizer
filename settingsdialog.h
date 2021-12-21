@@ -2,7 +2,9 @@
 #define SETTINGSDIALOG_H
 
 #include <QDialog>
-#include <settingsmodel.h>
+#include <settings.h>
+
+using namespace std;
 
 namespace Ui {
 class SettingsDialog;
@@ -21,10 +23,8 @@ private slots:
 
 private:
     Ui::SettingsDialog *ui;
-    void SaveSettings();
-    void LoadSettings();
     void setupCheckboxesUsingSavedSettings();
-    SettingsModel *settingsModel;
+    Settings *settings;
 
 };
 

@@ -26,10 +26,12 @@ set(PROJECT_SOURCES
         aboutdialog.cpp
         aboutdialog.ui
         ClipboardXX.hpp
-        settingsmodel.h
-        settingsmodel.cpp
         anonymizer.h
         anonymizer.cpp
+        settings.h
+        settings.cpp
+        privateinfo.h
+        privateinfo.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
