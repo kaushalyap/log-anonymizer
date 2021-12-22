@@ -8,11 +8,10 @@ Settings::Settings()
 array<bool, 4> Settings::loadSettings(){
     QSettings settings("ExampleCompany", "LogAnonymizer");
     settings.beginGroup("SettingsDialog");
-    bool notFirstRun = settings.value(QString::fromStdString(enumToString(FirstRun))).toBool();
-    bool hideAbsPaths = settings.value(QString::fromStdString(enumToString(AbsolutePaths))).toBool();
-    bool hideIps = settings.value(QString::fromStdString(enumToString(IpAddresses))).toBool();
-    bool hideMacs = settings.value(QString::fromStdString(enumToString(MacAddresses))).toBool();
-    array<bool, 4> boolSettings;
+    notFirstRun = settings.value(QString::fromStdString(enumToString(FirstRun))).toBool();
+    hideAbsPaths = settings.value(QString::fromStdString(enumToString(AbsolutePaths))).toBool();
+    hideIps = settings.value(QString::fromStdString(enumToString(IpAddresses))).toBool();
+    hideMacs = settings.value(QString::fromStdString(enumToString(MacAddresses))).toBool();
     boolSettings[0] = notFirstRun;
     boolSettings[1] = hideAbsPaths;
     boolSettings[2] = hideIps;
@@ -35,6 +34,8 @@ void Settings::saveSettings(bool firstRun, bool hideAbsPath, bool hideIps, bool 
     qDebug("Annonymize Abs. Paths : %d, IPs : %d , MACs : %d \n", hideAbsPath, hideIps, hideMacs);
     settings.endGroup();
 }
+
+
 
 string Settings::enumToString(SettingKeys key){
     switch(key){

@@ -6,6 +6,7 @@
 #include "./ClipboardXX.hpp"
 #include <iostream>
 #include <QDebug>
+#include <QMessageBox>
 
 using namespace std;
 
@@ -14,12 +15,14 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui -> lEditProjectDirName -> setVisible(false);
     initializeDefaultSettings();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete settings;
 }
 
 void MainWindow::initializeDefaultSettings(){
@@ -35,22 +38,19 @@ void MainWindow::initializeDefaultSettings(){
     }
 }
 
+// button clicked events
+
 void MainWindow::on_btnAnonymize_clicked()
 {
-    string input = ui-> pTxtEditInput -> toPlainText().toStdString();
-    string output = anonymizer -> anonymize(input);
-    ui -> pTxtEditOutput -> setPlainText(QString::fromStdString(output));
+    validateAnonymize();
 }
 
 void MainWindow::on_btnCopyToClipboard_clicked()
 {
-    CClipboardXX clipboard;
-
-    QString anonymizedLogText = ui -> pTxtEditOutput -> toPlainText();
-    string stdString = anonymizedLogText.toStdString();
-    clipboard << stdString;
-    qDebug("Following annonymized log were copied to the clipboard : \n %s", stdString.c_str());
+    copyTextToClipboard();
 }
+
+// menu action trigger events
 
 void MainWindow::on_actionSettings_triggered()
 {
@@ -66,10 +66,7 @@ void MainWindow::on_actionExit_triggered()
 
 void MainWindow::on_actionAnonymize_triggered()
 {
-    string input = ui-> pTxtEditInput -> toPlainText().toStdString();
-    string output = anonymizer -> anonymize(input);
-    ui -> pTxtEditOutput -> setPlainText(QString::fromStdString(output));
-
+    validateAnonymize();
 }
 
 void MainWindow::on_actionClear_triggered()
@@ -80,6 +77,42 @@ void MainWindow::on_actionClear_triggered()
 
 void MainWindow::on_actionCopy_to_Clipboard_triggered()
 {
+    copyTextToClipboard();
+}
+
+void MainWindow::on_actionAbout_triggered()
+
+// checkbox state change events
+{
+    AboutDialog aboutDialog;
+    aboutDialog.setModal(true);
+    aboutDialog.exec();
+}
+
+void MainWindow::on_cbHideProjectName_stateChanged(int cbState)
+{
+    qDebug("cb state change %d", cbState);
+    if(cbState==2){
+        ui -> lEditProjectDirName -> setVisible(true);
+    }
+    else if(cbState == 0){
+        ui -> lEditProjectDirName -> setText("");
+        ui -> lEditProjectDirName -> setVisible(false);
+    }
+}
+
+// reusable UI methods
+
+void MainWindow::showProjectNameEmptyErrorMessage(){
+    QMessageBox msgBox;
+    msgBox.setIcon(QMessageBox::Critical);
+    msgBox.setWindowTitle("Error");
+    msgBox.setText("Please fill in the project directory name");
+    msgBox.exec();
+}
+
+void MainWindow::copyTextToClipboard(){
+
     CClipboardXX clipboard;
 
     QString anonymizedLogText = ui -> pTxtEditOutput -> toPlainText();
@@ -88,16 +121,15 @@ void MainWindow::on_actionCopy_to_Clipboard_triggered()
     qDebug("Following annonymized log were copied to the clipboard : \n %s", stdString.c_str());
 }
 
-void MainWindow::on_actionAbout_triggered()
-{
-    AboutDialog aboutDialog;
-    aboutDialog.setModal(true);
-    aboutDialog.exec();
+void MainWindow::anonymizeInputDisplayOutput(){
+    string input = ui-> pTxtEditInput -> toPlainText().toStdString();
+    string projectName = ui -> lEditProjectDirName -> text().toStdString();
+    string output = anonymizer.anonymize(input, projectName);
+    ui -> pTxtEditOutput -> setPlainText(QString::fromStdString(output));
 }
 
-
-
-
-
-
-
+void MainWindow::validateAnonymize(){
+    (ui->cbHideProjectName -> isChecked() && ui->lEditProjectDirName -> text().isEmpty())?
+        showProjectNameEmptyErrorMessage():
+        anonymizeInputDisplayOutput();
+}
